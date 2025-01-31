@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.UserDao">
+	<select id="findUserById"
+		resultType="co.jp.mamol.myapp.dto.UserDto">
+		select u.id,u.password,u.name,u.depid,d.NAME as depname,u.tel,u.role_class
+		from users u
+		left join department d on u.DEPID = d.ID
+		where u.id=#{userid}
+	</select>
+</mapper>

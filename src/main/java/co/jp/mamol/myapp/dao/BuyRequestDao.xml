@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.BuyRequestDao">
+	<!-- DA1001 購入依頼登録 -->
+	<insert id="requestRegist"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+			insert into sizai (
+				id,
+				name,
+				num,
+				souko_id,
+				category_id,
+				request_user_id,
+				request_dept_id,
+				status,
+				request_date,
+				order_date,
+				delivery_date,
+				instore_date,
+				outstore_date,
+				note)
+			values(
+				id_seq.nextval,
+				#{name},
+				#{num},
+				null,
+				#{category_id},
+				#{request_user_id},
+				#{request_dept_id},
+				'1',
+				sysdate,
+				null,
+				null,
+				null,
+				null,
+				#{note})
+	</insert>
+	<!-- DA1002 カテゴリ取得 -->
+	<select id="getCategory"
+		resultType="co.jp.mamol.myapp.dto.CategoryDto">
+			select 
+				id,name 
+			from 
+				category 
+			order by 
+				id asc
+	</select>
+	<!-- DA1003 ユーザ別購入依頼リスト -->
+	<select id="getUserRequsetList"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+			where
+				s.request_date between to_date(#{fromTime},'yyyy-mm-dd hh24:mi:ss')
+				and to_date(#{toTime},'yyyy-mm-dd hh24:mi:ss')
+				and s.request_user_id = #{request_user_id}
+			order by
+				s.request_date asc,
+				s.id asc
+	</select>
+	<!-- DA1004 購入依頼一件取得 -->
+	<select id="getRequestById"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+			where
+				s.id = #{request_id}
+	</select>
+	<!-- DA1005 購入依頼変更 -->
+	<update id="modifyRequest"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+		update sizai 
+		set 
+			name = #{name},
+			num = #{num},
+			category_id = #{category_id},
+			note = #{note}
+		where 
+			id = #{id}
+	</update>
+	<!-- DA1006 購入依頼削除 -->
+	<delete id="deleteById">
+		delete from sizai 
+		where 
+			id = #{request_id} and
+			(status = '1' or status = '3')
+	</delete>	
+</mapper>
