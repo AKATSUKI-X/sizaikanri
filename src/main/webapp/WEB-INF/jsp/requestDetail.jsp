@@ -40,7 +40,7 @@
 				<tr>
 					<td><label>資材ID</label></td>
 					<td>
-						<font name="requestDF.sizaiDto.id"><s:property value="requestDF.sizaiDto.id"/></font>
+						<font><s:property value="requestDF.sizaiDto.id"/></font>
 						<input type="hidden" name="requestDF.sizaiDto.id" value="<s:property value='requestDF.sizaiDto.id'/>"/>
 					</td>
 				</tr>

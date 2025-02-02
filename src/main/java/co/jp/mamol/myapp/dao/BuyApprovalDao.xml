@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.BuyApprovalDao">
+	<!-- DA2001 部門別購入依頼一覧 -->
+	<select id="getDeptRequsetList"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+			where
+				s.request_date between to_date(#{fromTime},'yyyy-mm-dd hh24:mi:ss')
+				and to_date(#{toTime},'yyyy-mm-dd hh24:mi:ss')
+				and s.request_user_id = #{request_user_id}
+			order by
+				s.request_date asc,
+				s.id asc
+	</select>
+	<!-- DA2002 購入依頼一件取得 -->
+	<select id="getRequestById"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+			where
+				s.id = #{request_id}
+	</select>
+	<!-- DA2003 承認実行 -->
+	<update id="approval">
+		update sizai 
+		set 
+			status = '2'
+		where 
+			id = #{request_id} and
+			(status = '1' or status = '3')
+	</update>
+	<!-- DA2004 却下実行 -->
+	<update id="regect">
+		update sizai 
+		set 
+			status = '3'
+		where 
+			id = #{request_id} and
+			status = '1'
+	</update>
+	
+</mapper>

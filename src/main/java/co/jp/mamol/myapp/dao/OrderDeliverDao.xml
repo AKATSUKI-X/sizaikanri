@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.OrderDeliverDao">
+	<!-- DA3001 部署リスト取得 -->
+	<select id="deptList"
+		resultType="co.jp.mamol.myapp.dto.DepartmentDto">
+		select
+		id,name
+		from
+		department
+		order by
+		id asc
+	</select>
+
+	<!-- DA3002 承認済資材取得(部署別) -->
+	<select id="approvaledList"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.souko_id as souko_id,
+				s.souko_name as souko_name,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				to_char(s.order_date,'yyyy-mm-dd') as order_date,
+				to_char(s.delivery_date,'yyyy-mm-dd') as delivery_date,
+				to_char(s.instore_date,'yyyy-mm-dd') as instore_date,
+				to_char(s.outstore_date,'yyyy-mm-dd') as outstore_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+				left join souko sou
+				on s.souko_id = sou.id
+			where
+				s.request_dept_id = #{request_dept_id}
+				and (s.status = '2' or s.status = '4')
+	</select>
+
+	<!-- DA3003 発注済資材取得(部署別) -->
+		<select id="orderedList"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.souko_id as souko_id,
+				s.souko_name as souko_name,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				to_char(s.order_date,'yyyy-mm-dd') as order_date,
+				to_char(s.delivery_date,'yyyy-mm-dd') as delivery_date,
+				to_char(s.instore_date,'yyyy-mm-dd') as instore_date,
+				to_char(s.outstore_date,'yyyy-mm-dd') as outstore_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+				left join souko sou
+				on s.souko_id = sou.id
+			where
+				s.request_dept_id = #{request_dept_id}
+				and (s.status = '4' or s.status = '5')
+	</select>
+
+	<!-- DA3004 発注実行 -->
+	<update id="orderAct"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+		update sizai
+		set
+			status = '4',
+			order_date = sysdate
+		where
+			id = #{request_id} and
+			status = '2'
+	</update>
+
+	<!-- DA3005 納品実行 -->
+	<update id="deleverAct"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+		update sizai
+		set
+			status = '5'
+		where
+			id = #{request_id} and
+			status = '4'
+	</update>
+
+</mapper>

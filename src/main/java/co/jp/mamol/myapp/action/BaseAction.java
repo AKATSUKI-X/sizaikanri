@@ -10,17 +10,18 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import co.jp.mamol.myapp.dto.UserDto;
 
-@Results({
-		@Result(name = "error", location = "/WEB-INF/jsp/error.jsp")
-})
+@Results({ @Result(name = "error", location = "/WEB-INF/jsp/error.jsp") })
 public class BaseAction extends ActionSupport implements SessionAware {
+
+	private static final long serialVersionUID = 1L;
+
 	private Map<String, Object> session;
 
 	private String message;
 
 	private boolean messageflag;
 
-	//requestログイン状態確認
+	// requestログイン状態確認
 	public boolean requestLoginCheck() {
 		UserDto loginUser = getLoginUser();
 
@@ -34,7 +35,7 @@ public class BaseAction extends ActionSupport implements SessionAware {
 
 	}
 
-	//approvalログイン状態確認
+	// approvalログイン状態確認
 	public boolean approvalLoginCheck() {
 		UserDto loginUser = getLoginUser();
 
@@ -48,7 +49,7 @@ public class BaseAction extends ActionSupport implements SessionAware {
 
 	}
 
-	//orderログイン状態確認
+	// orderログイン状態確認
 	public boolean orderLoginCheck() {
 		UserDto loginUser = getLoginUser();
 
@@ -63,7 +64,7 @@ public class BaseAction extends ActionSupport implements SessionAware {
 		}
 	}
 
-	//storeログイン状態確認
+	// storeログイン状態確認
 	public boolean storeLoginCheck() {
 		UserDto loginUser = getLoginUser();
 
@@ -76,34 +77,34 @@ public class BaseAction extends ActionSupport implements SessionAware {
 		}
 	}
 
-	//セッション設定
+	// セッション設定
 	public void setSession(Map<String, Object> session) {
 		this.session = session;
 	}
 
-	//セッション取得
+	// セッション取得
 	public Map<String, Object> getSession() {
 		return session;
 	}
 
-	//表示メッセージ取得
+	// 表示メッセージ取得
 	public String getMessage() {
 		return message;
 	}
 
-	//表示メッセージ設定
+	// 表示メッセージ設定
 	public void setMessage(String message, boolean messageflag) {
 		this.message = message;
 		this.messageflag = messageflag;
 	}
 
-	//ログインユーザ情報取得
+	// ログインユーザ情報取得
 	public UserDto getLoginUser() {
 		UserDto loginInfo = (UserDto) session.get("loginInfo");
 		return loginInfo;
 	}
 
-	//ログインユーザ情報設定
+	// ログインユーザ情報設定
 	public void setLoginInfo(UserDto loginInfo) {
 		session.put("loginInfo", loginInfo);
 	}
