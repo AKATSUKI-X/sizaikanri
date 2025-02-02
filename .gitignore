@@ -2,4 +2,7 @@
 /.project
 /.classpath
 /tables.ddl
-/.settings/
+/.settings
+/bin/
+.DS_Store
+**/META-INF/
