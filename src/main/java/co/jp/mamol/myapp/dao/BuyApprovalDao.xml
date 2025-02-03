@@ -30,7 +30,7 @@
 			where
 				s.request_date between to_date(#{fromTime},'yyyy-mm-dd hh24:mi:ss')
 				and to_date(#{toTime},'yyyy-mm-dd hh24:mi:ss')
-				and s.request_user_id = #{request_user_id}
+				and s.request_dept_id = #{request_dept_id}
 			order by
 				s.request_date asc,
 				s.id asc

@@ -17,8 +17,6 @@ import co.jp.mamol.myapp.service.BuyRequestService;
 })
 public class RequestDetailAction extends BaseAction {
 
-	private static final long serialVersionUID = 1L;
-
 	private RequestDetailForm requestDF = new RequestDetailForm();
 
 	@Autowired

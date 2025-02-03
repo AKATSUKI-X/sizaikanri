@@ -1,5 +1,7 @@
 package co.jp.mamol.myapp.action;
 
+
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
@@ -9,10 +11,8 @@ import co.jp.mamol.myapp.dto.SizaiDto;
 import co.jp.mamol.myapp.form.ApprovalDetailForm;
 import co.jp.mamol.myapp.service.BuyApprovalService;
 
-@Results({ @Result(name = "approvalDetailInit", location = "") })
+@Results({ @Result(name = "approvalDetailInit", location = "/WEB-INF/jsp/approvalDetail.jsp") })
 public class ApprovalDetailAction extends BaseAction {
-
-	private static final long serialVersionUID = 1L;
 
 	private ApprovalDetailForm approvalDF = new ApprovalDetailForm();
 
@@ -23,7 +23,7 @@ public class ApprovalDetailAction extends BaseAction {
 	public String approvalDetailInit() {
 
 		// approvalログイン状態チェック
-		if (!approvalLoginCheck()) {
+		if (!approvalLoginCheck() && !orderLoginCheck()) {
 			return "error";
 		}
 

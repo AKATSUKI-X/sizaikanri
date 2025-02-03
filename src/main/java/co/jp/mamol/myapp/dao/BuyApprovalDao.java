@@ -12,7 +12,7 @@ public interface BuyApprovalDao {
 	public List<SizaiDto> getDeptRequsetList(
 			@Param("fromTime") String fromTime,
 			@Param("toTime") String toTime,
-			@Param("request_user_id") String request_user_id);
+			@Param("request_dept_id") String request_dept_id);
 	
 	//DA2002 購入依頼一件取得
 	public SizaiDto getRequestById(@Param("request_id") int request_id);

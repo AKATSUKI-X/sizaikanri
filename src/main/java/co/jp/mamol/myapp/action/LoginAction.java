@@ -19,8 +19,6 @@ import co.jp.mamol.myapp.service.LoginService;
 		@Result(name = "store", location = "/inStore/init", type = "redirect") })
 public class LoginAction extends BaseAction {
 
-	private static final long serialVersionUID = 1L;
-
 	private LoginForm loginForm = new LoginForm();
 
 	@Autowired

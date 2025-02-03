@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.mamol.myapp.dao.StoreDao">
+	<!-- DA4001 資材情報一件取得 -->
+	<select id="getSizaiById"
+		resultType="co.jp.mamol.myapp.dto.SizaiDto">
+			select
+				s.id as id,
+				s.name as name,
+				s.num as num,
+				s.souko_id as souko_id,
+				sou.name as souko_name,
+				s.category_id as category_id,
+				c.name as category_name,
+				s.request_user_id as request_user_id,
+				u.name as request_user_name,
+				s.request_dept_id as request_dept_id,
+				d.name as request_dept_name,
+				s.status as status,
+				sta.name as status_name,
+				to_char(s.request_date,'yyyy-mm-dd') as request_date,
+				to_char(s.order_date,'yyyy-mm-dd') as order_date,
+				to_char(s.delivery_date,'yyyy-mm-dd') as delivery_date,
+				to_char(s.instore_date,'yyyy-mm-dd') as instore_date,
+				to_char(s.outstore_date,'yyyy-mm-dd') as outstore_date,
+				s.note as note
+			from sizai s
+				inner join category c
+				on s.category_id = c.id
+				inner join users u
+				on s.request_user_id = u.id
+				inner join department d
+				on s.request_dept_id = d.id
+				inner join status sta
+				on s.status = sta.code
+				left join souko sou
+				on s.souko_id = sou.id
+			where
+				s.id = #{request_id}
+	</select>
+
+	<!-- DA4002 倉庫情報取得 -->
+	<select id="getSoukoList"
+		resultType="co.jp.mamol.myapp.dto.SoukoDto">
+		select
+		id,name,address
+		from
+		souko
+		order by
+		id asc
+	</select>
+
+	<!-- DA4003 入庫実行 -->
+	<update id="inStoreAct"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+		update sizai
+		set
+			status = '6',
+			souko_id = #{souko_id},
+			instore_date = sysdate
+		where
+			id = #{id} and
+			status = '5'
+	</update>
+
+	<!-- DA4004 出庫実行 -->
+	<update id="outStoreAct"
+		parameterType="co.jp.mamol.myapp.dto.SizaiDto">
+		update sizai
+		set
+			status = '7',
+			outstore_date = sysdate
+		where
+			id = #{id} and
+			status = '6'
+	</update>
+
+</mapper>

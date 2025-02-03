@@ -13,16 +13,19 @@ import co.jp.mamol.myapp.dto.SizaiDto;
 import co.jp.mamol.myapp.form.OrderDeliverForm;
 import co.jp.mamol.myapp.service.OrderDeleverService;
 
-@Results({ @Result(name = "orderInit", location = "/WEB-INF/jsp/order.jsp") })
-public class OrderAction extends BaseAction {
+@Results({ 
+	@Result(name = "deleverInit", location = "/WEB-INF/jsp/delever.jsp"),
+	@Result(name="deleverQR",location = "/WEB-INF/jsp/qr.jsp")
+})
+public class DeleverAction extends BaseAction {
 
 	private OrderDeliverForm orderDeliverF = new OrderDeliverForm();
 
 	@Autowired
 	private OrderDeleverService orderDeleverS;
 
-	@Action("/order/init")
-	public String orderInit() {
+	@Action("/delever/init")
+	public String deleverInit() {
 
 		// orderログイン状態チェック
 		if (!orderLoginCheck()) {
@@ -34,18 +37,18 @@ public class OrderAction extends BaseAction {
 
 		String request_dept_id = deptList.get(0).getId();
 
-		List<SizaiDto> sizaiDtoList = orderDeleverS.approvaledList(request_dept_id);
+		List<SizaiDto> sizaiDtoList = orderDeleverS.orderedList(request_dept_id);
 		orderDeliverF.setSizaiDtoList(sizaiDtoList);
 
 		Map<String, Object> session = getSession();
 
 		session.put("deptId", request_dept_id);
 
-		return "orderInit";
+		return "deleverInit";
 	}
 
-	@Action("/order/search")
-	public String orderSearch() {
+	@Action("/delever/search")
+	public String deleverSearch() {
 
 		// orderログイン状態チェック
 		if (!orderLoginCheck()) {
@@ -57,18 +60,18 @@ public class OrderAction extends BaseAction {
 
 		String request_dept_id = orderDeliverF.getRequest_dept_id();
 
-		List<SizaiDto> sizaiDtoList = orderDeleverS.approvaledList(request_dept_id);
+		List<SizaiDto> sizaiDtoList = orderDeleverS.orderedList(request_dept_id);
 		orderDeliverF.setSizaiDtoList(sizaiDtoList);
 
 		Map<String, Object> session = getSession();
 
 		session.put("deptId", request_dept_id);
 
-		return "orderInit";
+		return "deleverInit";
 	}
 
-	@Action("/order/act")
-	public String orderAct() {
+	@Action("/delever/act")
+	public String deleverAct() {
 		// orderログイン状態チェック
 		if (!orderLoginCheck()) {
 			return "error";
@@ -77,21 +80,32 @@ public class OrderAction extends BaseAction {
 		Map<String, Object> session = getSession();
 		String request_dept_id = (String) session.get("deptId");
 
-		boolean orderAct = orderDeleverS.orderAct(orderDeliverF.getRequest_id());
+		boolean deleverAct = orderDeleverS.deleverAct(orderDeliverF.getRequest_id());
 
-		if (orderAct) {
-			setMessage("発注しました。", orderAct);
+		if (deleverAct) {
+			setMessage("納品しました。", deleverAct);
 		} else {
-			setMessage("発注失敗しました。", orderAct);
+			setMessage("納品失敗しました。", deleverAct);
 		}
 
 		List<DepartmentDto> deptList = orderDeleverS.deptList();
 		orderDeliverF.setDepartmentDtoList(deptList);
 
-		List<SizaiDto> sizaiDtoList = orderDeleverS.approvaledList(request_dept_id);
+		List<SizaiDto> sizaiDtoList = orderDeleverS.orderedList(request_dept_id);
 		orderDeliverF.setSizaiDtoList(sizaiDtoList);
 
-		return "orderInit";
+		return "deleverInit";
+	}
+
+	@Action("/delever/qr")
+	public String deleverQR() {
+
+		// orderログイン状態チェック
+		if (!orderLoginCheck()) {
+			return "error";
+		}
+
+		return "deleverQR";
 	}
 
 	public OrderDeliverForm getOrderDeliverF() {

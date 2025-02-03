@@ -13,11 +13,9 @@ import co.jp.mamol.myapp.dto.SizaiDto;
 import co.jp.mamol.myapp.form.ApprovalForm;
 import co.jp.mamol.myapp.service.BuyApprovalService;
 
-@Results({ @Result(name = "approvalinit", location = ""),
+@Results({ @Result(name = "approvalinit", location = "/WEB-INF/jsp/approvalList.jsp"),
 		@Result(name = "approvalredirect", location = "/approvalList/init", type = "redirect") })
 public class ApprovalAction extends BaseAction {
-
-	private static final long serialVersionUID = 1L;
 
 	private ApprovalForm approvalF = new ApprovalForm();
 
@@ -48,7 +46,7 @@ public class ApprovalAction extends BaseAction {
 		approvalF.setFromTime(fromTime);
 
 		List<SizaiDto> sizaiDtoList = buyApprovalS.getDeptRequsetList(approvalF.getFromTime(), approvalF.getToTime(),
-				getLoginUser().getId());
+				getLoginUser().getDepid());
 		if (sizaiDtoList == null || sizaiDtoList.size() == 0) {
 			setMessage("指定期間の購入依頼が登録されていません。", false);
 		}
@@ -67,7 +65,7 @@ public class ApprovalAction extends BaseAction {
 		}
 
 		List<SizaiDto> sizaiDtoList = buyApprovalS.getDeptRequsetList(approvalF.getFromTime(), approvalF.getToTime(),
-				getLoginUser().getId());
+				getLoginUser().getDepid());
 		if (sizaiDtoList == null || sizaiDtoList.size() == 0) {
 			setMessage("指定期間の購入依頼が登録されていません。", false);
 		}

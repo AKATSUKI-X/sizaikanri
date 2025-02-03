@@ -15,10 +15,10 @@ public class BuyApprovalService {
 	private BuyApprovalDao buyApprovalDao;
 
 	// BL2001 部門別購入依頼一覧
-	public List<SizaiDto> getDeptRequsetList(String fromTime, String toTime, String request_user_id) {
+	public List<SizaiDto> getDeptRequsetList(String fromTime, String toTime, String request_dept_id) {
 		toTime = toTime + " " + "23:59:59";
 		fromTime = fromTime + " " + "00:00:00";
-		return buyApprovalDao.getDeptRequsetList(fromTime, toTime, request_user_id);
+		return buyApprovalDao.getDeptRequsetList(fromTime, toTime, request_dept_id);
 	}
 
 	// BL2002 購入依頼一件取得

@@ -13,8 +13,6 @@ import co.jp.mamol.myapp.dto.UserDto;
 @Results({ @Result(name = "error", location = "/WEB-INF/jsp/error.jsp") })
 public class BaseAction extends ActionSupport implements SessionAware {
 
-	private static final long serialVersionUID = 1L;
-
 	private Map<String, Object> session;
 
 	private String message;
